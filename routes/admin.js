@@ -1,5 +1,26 @@
 import { excuteQuery } from '../config/db.js' // Importera hjälpfunktionen för att köra SQL-frågor mot MySQL
 import bcrypt from "bcrypt"; // Importera bcrypt för hashade lösenord
+import jwt from "jsonwebtoken";
+
+export const getMe = async (req, reply) => {
+    try {
+        const loginHeader = req.headers.authorization;
+        if (!loginHeader) return reply.status(401).send({ error: "Ingen token"});
+
+        const token = loginHeader.split(" ")[1];
+        if (!token) return reply.status(401).send({ error: "Token saknas" }); // Kontrollera att token finns
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || "supersecret");
+
+        const users = await excuteQuery(
+            "SELECT id, username FROM admin WHERE id =?",
+            [decoded.id]
+        );
+
+        reply.send(users[0]); // Returnerar ett objekt, inte en array
+    } catch (err) {
+        reply.status(401).send({ error: "Ogiltig token" });
+    }
+};
 
 
 // Funktion som hämtar alla användare från databasen
