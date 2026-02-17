@@ -39,7 +39,7 @@ export const addBlogPost = async(req, reply) => {
             }    
                   
 
-        // SQL-fråga för att lägga till todo
+        // SQL-fråga för att lägga till blogginlägg
         let blogPostsData = await excuteQuery("insert into blog_posts(title, description, image) values(?, ?, ?)",
             [
                 title, 
@@ -69,7 +69,7 @@ export const updateBlogPost = async(req, reply) => {
                 return reply.status(400).send({ error: "Beskrivning måste fyllas i korrekt." });
             }   
 
-        // SQL-fråga för att uppdatera todo
+        // SQL-fråga för att uppdatera blogginlägg
         let blogPostsData = await excuteQuery(`update blog_posts set title=?, description=?, image=?, date=? where id=${id}`,
             [ 
                 title, 
