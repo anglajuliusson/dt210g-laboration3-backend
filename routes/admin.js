@@ -1,4 +1,6 @@
 import { excuteQuery } from '../config/db.js' // Importera hjälpfunktionen för att köra SQL-frågor mot MySQL
+import bcrypt from "bcrypt"; // Importera bcrypt för hashade lösenord
+
 
 // Funktion som hämtar alla användare från databasen
 export const getAllAdmins = async(req, reply) => {
@@ -28,6 +30,9 @@ export const addAdmin = async(req, reply) => {
     try {
         const { username, password } = req.body;
 
+            // Hashat lösenord
+            const hashedPassword = await bcrypt.hash(password, 10);
+
             // Validering: kolla att username är en icke-tom sträng
             if (!username || typeof username !== 'string' || username.trim() === '') {
                 return reply.status(400).send({ error: "Användarnamn måste fyllas i korrekt." });
@@ -43,7 +48,7 @@ export const addAdmin = async(req, reply) => {
         let adminData = await excuteQuery("insert into admin(username, password) values(?, ?)",
             [
                 username,
-                password
+                hashedPassword
             ]
         );
         reply.status(201).send({ message: "Användare skapad!", adminData});
@@ -57,6 +62,9 @@ export const updateAdmin = async(req, reply) => {
     let id = req.params.id;
     try {
         const { username, password } = req.body;
+
+            // Hasha nytt lösenord
+            const hashedPassword = await bcrypt.hash(password, 10);
 
             // Validering: kolla att username är en icke-tom sträng
             if (!username || typeof username !== 'string' || username.trim() === '') {
@@ -72,7 +80,7 @@ export const updateAdmin = async(req, reply) => {
         let adminData = await excuteQuery(`update admin set username=?, password=? where id=${id}`,
             [ 
                 username,
-                password
+                hashedPassword
             ]
         );
         reply.status(201).send({ message: "Användare uppdaterad!", adminData});
