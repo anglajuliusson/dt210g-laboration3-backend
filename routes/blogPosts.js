@@ -26,7 +26,7 @@ export const getBlogPostById = async(req, reply) => {
 // Funktion som lägger till nytt blogginlägg
 export const addBlogPost = async(req, reply) => {
     try {
-        const { title, description, image, date } = req.body;
+        const { title, description, image } = req.body;
 
             // Validering: kolla att title är en icke-tom sträng
             if (!title || typeof title !== 'string' || title.trim() === '') {
@@ -40,12 +40,11 @@ export const addBlogPost = async(req, reply) => {
                   
 
         // SQL-fråga för att lägga till todo
-        let blogPostsData = await excuteQuery("insert into blog_posts(title, description, image, date) values(?, ?, ?, ?)",
+        let blogPostsData = await excuteQuery("insert into blog_posts(title, description, image) values(?, ?, ?)",
             [
                 title, 
                 description, 
                 image,
-                date
             ]
         );
         reply.status(201).send({ message: "Blogginlägg skapat!", blogPostsData});
