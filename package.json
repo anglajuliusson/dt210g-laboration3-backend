@@ -1,0 +1,23 @@
+{
+  "name": "dt210g-laboration3-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anglajuliusson/dt210g-laboration3-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anglajuliusson/dt210g-laboration3-backend/issues"
+  },
+  "homepage": "https://github.com/anglajuliusson/dt210g-laboration3-backend#readme",
+  "dependencies": {
+    "fastify": "^5.7.4"
+  }
+}
