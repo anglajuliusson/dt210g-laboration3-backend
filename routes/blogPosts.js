@@ -5,7 +5,7 @@ export const getAllBlogPosts = async(req, reply) => {
     try {
         // Anropar excuteQuery för att skicka SQL till databasen
         // Resultatet returneras som ett Promise och hanteras med await
-        let blogPostsData = await excuteQuery("select * from blog_posts", []);
+        let blogPostsData = await excuteQuery("select * from blog_posts ORDER BY date DESC, id DESC", []);
         reply.status(200).send(blogPostsData);
     } catch (err) {
         reply.status(500).send(err);
