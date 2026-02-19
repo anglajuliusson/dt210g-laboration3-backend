@@ -26,7 +26,7 @@ export const getBlogPostById = async(req, reply) => {
 // Funktion som lägger till nytt blogginlägg
 export const addBlogPost = async(req, reply) => {
     try {
-        const { title, description, image } = req.body;
+        const { title, description, image, date } = req.body;
 
             // Validering: kolla att title är en icke-tom sträng
             if (!title || typeof title !== 'string' || title.trim() === '') {
@@ -38,15 +38,24 @@ export const addBlogPost = async(req, reply) => {
                 return reply.status(400).send({ error: "Beskrivning måste fyllas i korrekt." });
             }    
                   
+            const imageValue = image && image.trim() !== "" ? image.trim() : null;
+            const hasDate = typeof date === "string" && date.trim() !== "";
 
-        // SQL-fråga för att lägga till blogginlägg
-        let blogPostsData = await excuteQuery("insert into blog_posts(title, description, image) values(?, ?, ?)",
-            [
-                title, 
-                description, 
-                image,
-            ]
-        );
+            let blogPostsData;
+
+            // Om datum fylls i
+            if (hasDate) {
+              blogPostsData = await excuteQuery(
+                "INSERT INTO blog_posts(title, description, image, date) VALUES(?, ?, ?, ?)",
+                [title.trim(), description.trim(), imageValue, date.trim()]
+              );
+            } else {
+              // Låt databasen sätta DEFAULT CURRENT_TIMESTAMP
+              blogPostsData = await excuteQuery(
+                "INSERT INTO blog_posts(title, description, image) VALUES(?, ?, ?)",
+                [title.trim(), description.trim(), imageValue]
+              );
+            }
         reply.status(201).send({ message: "Blogginlägg skapat!", blogPostsData});
     } catch (err) {
         reply.status(400).send(err);
